@@ -1,0 +1,41 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-size: 1.125rem;
+}
+
+.img-container{
+width: 250px;
+margin-left: -1.6rem;
+}
+
+
+button{
+    margin: 1rem 0;
+    margin-right: 1rem;
+}
+
+p {
+  padding-bottom: 2rem;
+}
+
+
+img {
+  object-fit: cover;
+  width: 100%;
+}
