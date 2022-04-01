@@ -10,38 +10,6 @@ Create a http server which should run on port 5000 and handle following routes:-
 
 3. Use seperate routes to handle requests for stylesheets and images
 
-```js
-const http = require('http');
-const fs = require('fs');
-
-const server = http.creaateServer(handleRequest);
-
-function handleRequest(req, res) {
-    if(req.method === 'GET' && req.url === '/'){
-        setHeader('Content-Type', 'text/html');
-        fs.createReadStrem('./assets/index.png').pipe(res);
-    }
-    if(req.method === 'GET' && req.url === '/about'){
-        setHeader('Content-Type', 'text/html');
-        fs.createReadStrem('./assets/about.png').pipe(res);
-    }
-    if (req.url.split('.').pop() === 'css') {
-       res.setHeader('Content-Type', 'text/css');
-       fs.readFile('./assets/stylesheets/style.css' + req.url, (err, content) => {
-          if (err) return console.log(err);
-          res.end(content)
-      })
-    if (req.method === 'GET' && http.req.url === '/images') {
-        res.setHeader('Content-Type', 'image/png');
-        fs.readFile('./assets/images' + req.url, (err, content) => {
-            if (err) return console.log(err);
-            res.end(content)
-        })
-}
-server.listen(5000, () => {
-    console.log('Server is listening on port 5k');
-})
-```
 
 ##### Note:-
 
