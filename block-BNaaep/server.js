@@ -15,8 +15,8 @@ let server = http.createServer(handelRequest);
 function handelRequest(req, res) {
   // checking requested method and url
   console.log(`req.method:${req.method} & req.url:${req.url}`);
-
   var store = '';
+  parsedUrl = url.parse( req.url, true );
   req.on('data', (chunk) => {
     store = store + chunk;
   });
@@ -89,6 +89,27 @@ function handelRequest(req, res) {
         });
       });
     }
+    
+    // handle GET request on "/users"
+
+    if ( parsedUrl.pathname === '/users' && req.method === 'GET' ) {
+      let user = parsedUrl.query.username;
+      let path = __dirname + '/contacts/' + user + '.json';
+
+      if ( user ) {
+        fs.readFile( path, ( err, content ) => {
+          if ( err ) return console.log( err );
+          let data = JSON.parse(content.toString());
+          res.writeHead( 200, { 'Content-Type': 'text/html' });
+          res.write(`<h2>${data.name}</h2>`)
+          res.write(`<h2>${data.email}</h2>`)
+          res.write(`<h2>${data.username}</h2>`)
+          res.write(`<h2>${data.age}</h2>`)
+          res.write(`<h2>${data.about}</h2>`)
+          return res.end();
+        } )
+      }
+    } 
   })
 }
 
