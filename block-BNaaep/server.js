@@ -49,11 +49,12 @@ function handelRequest(req, res) {
 
     var img = path.join(__dirname, "/assets/")
     // handel routes for images in assets folder
-    if (req.url.split('.').pop() === 'png' || req.url.split('.').pop() === 'jpg') {
+    var ext = req.url.split('.').pop();
+    if (ext === 'png' || ext === 'jpg') {
       // set header for image file
-      res.setHeader('Content-Type', `image/png`);
+      res.setHeader('Content-Type', `image/${ext}`);
       // read the image send to response
-      fs.createReadStream(__dirname + '/assets/index.png').pipe(res);
+      fs.createReadStream(__dirname + `/assets/${req.url}`).pipe(res);
     }
 
     // handel request on contact path which render a HTML form
@@ -73,10 +74,11 @@ function handelRequest(req, res) {
       // wx flag ensures that given username.json should not already exist in users directory, otherwise throws an error
       fs.open(contactDir + parsedData.username + ".json", "wx", (err, fd) => {
         console.log(err);
+        return res.end(`${username} already exists`);
         // fd is pointing to newly created file inside users directory
         // once file is created, we can write content to file
         // since store has all the data of the user              
-        fs.writeFile(fd, JSON.stringify(qs.parse(store)), 'utf-8', (err) => {
+        fs.writeFile(fd, JSON.stringify(parsedData), 'utf-8', (err) => {
           console.log(err);
           // err indicated file was not written
           // if no error, file was written successfully
@@ -105,7 +107,7 @@ function handelRequest(req, res) {
           res.write(`<h2>${data.email}</h2>`)
           res.write(`<h2>${data.username}</h2>`)
           res.write(`<h2>${data.age}</h2>`)
-          res.write(`<h2>${data.about}</h2>`)
+          res.write(`<h2>${data.bio}</h2>`)
           return res.end();
         } )
       }
