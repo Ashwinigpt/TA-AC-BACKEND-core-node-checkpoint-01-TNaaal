@@ -44,7 +44,7 @@ function handelRequest(req, res) {
       // set header for css file
       res.setHeader('Content-Type', 'text/css');
       // read css file and send it in response
-      fs.createReadStream(__dirname + "/stylesheet/style.css").pipe(res);
+      fs.createReadStream(__dirname + `/stylesheet/style.css`).pipe(res);
     }
 
     var img = path.join(__dirname, "/assets/")
@@ -73,13 +73,20 @@ function handelRequest(req, res) {
       // We have to create a file using username + append .json to create a proper file
       // wx flag ensures that given username.json should not already exist in users directory, otherwise throws an error
       fs.open(contactDir + parsedData.username + ".json", "wx", (err, fd) => {
-        console.log(err);
-        return res.end(`${username} already exists`);
+        if(err){
+          res.setHeader('Content-Type', 'text/html');
+          res.write(fd);
+          res.end(`${username} already exists`);
+        }
         // fd is pointing to newly created file inside users directory
         // once file is created, we can write content to file
         // since store has all the data of the user              
         fs.writeFile(fd, JSON.stringify(parsedData), 'utf-8', (err) => {
-          console.log(err);
+          if(err){
+            res.setHeader('Content-Type', 'text/html');
+            res.write(fd);
+            res.end(`file was not written`);
+          }
           // err indicated file was not written
           // if no error, file was written successfully
           // close the file
